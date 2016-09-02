@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import {createStore, compose} from 'redux';
 
 const withDevTools = (
   // process.env.NODE_ENV === 'development' &&
@@ -17,24 +18,23 @@ const reducer = (state = { counter: 0 }, action) => {
 };
 
 class Counter extends Component {
-  constructor() {
-    super();
-    this.state = { counter: 0 };
-    
+  constructor(props) {
+    super(props);
+
+    const storeEnhancers = compose(
+      (withDevTools) ? withDevTools({name: this.constructor.name}) : f => f,
+    );
+
+    this._store = createStore(reducer, {counter: 0}, storeEnhancers);
+    this._store.subscribe(() => { this.setState(this._store.getState()); });
+    this.state = this._store.getState();
+
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
   }
 
-  componentWillMount() {
-    if (withDevTools) {
-      this.store = window.devToolsExtension(reducer);
-      this.store.subscribe(() => { this.setState(this.store.getState()); });
-    }
-  }
-
   dispatch(action) {
-    if (withDevTools) this.store.dispatch(action);
-    else this.setState(reducer(this.state, action));
+    this._store.dispatch(action);
   }
 
   increment() {

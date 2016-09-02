@@ -16,7 +16,8 @@
   "homepage": "https://github.com/zalmoxisus/redux-devtools-extension",
   "dependencies": {
     "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "react-dom": "^15.1.0",
+    "redux": "^3.5.2"
   },
   "devDependencies": {
     "babel-core": "^6.3.15",
